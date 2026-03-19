@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chalant — Choose Your Size</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g:    #b8860b;
+  --gl:   #d4a017;
+  --gd:   #7a4f00;
+  --gp:   #f5e8c0;
+  --cream:#fefaf6;
+  --ink:  #1a0e04;
+  --im:   #3a2010;
+  --il:   #5a3a18;
+  --rs:   rgba(160,110,0,0.45);
+  --r:    rgba(160,110,0,0.85);
+  --bg:   #2a1f14;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100vh;background:var(--bg);font-family:'Jost',sans-serif;font-weight:300;color:var(--cream);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
+body::after{content:'';position:fixed;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 31px,rgba(160,110,0,0.06) 31px,rgba(160,110,0,0.06) 32px);pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:64px 24px 80px;}
+header{text-align:center;margin-bottom:56px;animation:fadeUp 0.8s ease both;}
+.orn{font-size:11px;letter-spacing:0.6em;color:var(--g);margin-bottom:12px;opacity:0.9;}
+.brand{font-family:'Great Vibes',cursive;font-size:72px;color:var(--gp);line-height:1;text-shadow:0 2px 20px rgba(184,134,11,0.3);letter-spacing:0.02em;}
+.divider{width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent);margin:18px auto;}
+.tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(254,250,246,0.55);letter-spacing:0.1em;}
+.section-label{font-size:8.5px;letter-spacing:0.32em;text-transform:uppercase;color:var(--g);text-align:center;margin-bottom:28px;animation:fadeUp 0.8s 0.15s ease both;}
+.edition-row{display:flex;justify-content:center;gap:0;margin-bottom:48px;animation:fadeUp 0.8s 0.2s ease both;}
+.ed-btn{font-family:'Jost',sans-serif;font-weight:400;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;padding:10px 28px;border:1.5px solid rgba(184,134,11,0.4);background:transparent;color:rgba(254,250,246,0.45);cursor:pointer;transition:all 0.25s ease;}
+.ed-btn:first-child{border-right:none;border-radius:2px 0 0 2px;}
+.ed-btn:last-child{border-radius:0 2px 2px 0;}
+.ed-btn.active{background:rgba(184,134,11,0.15);border-color:var(--g);color:var(--gp);}
+.ed-btn:hover:not(.active){border-color:rgba(184,134,11,0.65);color:rgba(254,250,246,0.7);}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;animation:fadeUp 0.8s 0.3s ease both;}
+.card{position:relative;background:rgba(254,250,246,0.04);border:1.5px solid rgba(160,110,0,0.3);padding:28px 20px 24px;cursor:pointer;transition:all 0.3s ease;display:flex;flex-direction:column;align-items:center;border-radius:2px;overflow:hidden;}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(184,134,11,0.07) 0%,transparent 60%);opacity:0;transition:opacity 0.3s ease;}
+.card:hover::before,.card.selected::before{opacity:1;}
+.card:hover{border-color:rgba(160,110,0,0.7);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.35);}
+.card.selected{border-color:var(--g);background:rgba(184,134,11,0.1);box-shadow:0 0 0 1px rgba(184,134,11,0.3),0 12px 40px rgba(0,0,0,0.4);}
+.paper-preview{position:relative;margin-bottom:20px;transition:transform 0.3s ease;}
+.card:hover .paper-preview{transform:scale(1.03);}
+.paper-sheet{background:var(--cream);box-shadow:3px 3px 0 rgba(0,0,0,0.25),0 4px 16px rgba(0,0,0,0.3);position:relative;overflow:hidden;}
+.paper-sheet::before{content:'';position:absolute;top:0;bottom:0;left:0;width:4px;background:var(--g);}
+.paper-sheet::after{content:'';position:absolute;top:28px;left:10px;right:8px;bottom:8px;background-image:repeating-linear-gradient(0deg,transparent,transparent 9px,rgba(160,110,0,0.2) 9px,rgba(160,110,0,0.2) 10px);}
+.check{position:absolute;top:10px;right:10px;width:18px;height:18px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--cream);opacity:0;transform:scale(0.6);transition:all 0.25s ease;z-index:2;}
+.card.selected .check{opacity:1;transform:scale(1);}
+.size-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--gp);letter-spacing:0.06em;margin-bottom:4px;text-align:center;}
+.size-dims{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(160,110,0,0.8);margin-bottom:10px;text-align:center;}
+.size-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:rgba(254,250,246,0.4);text-align:center;line-height:1.5;}
+.generate-wrap{text-align:center;margin-top:48px;animation:fadeUp 0.8s 0.45s ease both;}
+.gen-btn{font-family:'Jost',sans-serif;font-weight:400;font-size:9px;letter-spacing:0.28em;text-transform:uppercase;padding:16px 48px;background:linear-gradient(135deg,var(--gd),var(--g));color:var(--cream);border:none;cursor:pointer;transition:all 0.25s ease;position:relative;overflow:hidden;border-radius:2px;box-shadow:0 4px 24px rgba(122,79,0,0.4);}
+.gen-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--g),var(--gl));opacity:0;transition:opacity 0.25s ease;}
+.gen-btn:hover::before{opacity:1;}
+.gen-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(122,79,0,0.5);}
+.gen-btn:active{transform:translateY(0);}
+.gen-btn span{position:relative;z-index:1;}
+.gen-btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
+.summary{margin-top:20px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:rgba(254,250,246,0.35);letter-spacing:0.06em;min-height:20px;transition:color 0.3s;}
+.summary.has-selection{color:rgba(212,160,23,0.7);}
+.generating-msg{margin-top:24px;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--g);display:none;}
+.generating-msg.visible{display:block;animation:pulse 1s ease infinite alternate;}
+@keyframes pulse{from{opacity:0.4;}to{opacity:1;}}
+footer{text-align:center;margin-top:72px;font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(254,250,246,0.18);animation:fadeUp 0.8s 0.6s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:600px){.brand{font-size:52px;}.cards-grid{grid-template-columns:1fr 1fr;gap:14px;}.wrap{padding:40px 16px 60px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="orn">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="brand">Chalant</div>
+    <div class="divider"></div>
+    <div class="tagline">choose your paper size</div>
+  </header>
+
+  <div class="section-label">Edition</div>
+  <div class="edition-row">
+    <button class="ed-btn active" data-edition="dated" onclick="setEdition(this)">2026 Dated</button>
+    <button class="ed-btn" data-edition="blank" onclick="setEdition(this)">Undated</button>
+  </div>
+
+  <div class="section-label">Paper Size</div>
+  <div class="cards-grid">
+    <div class="card" data-size="A6" onclick="selectCard(this)">
+      <div class="check">✓</div>
+      <div class="paper-preview"><div class="paper-sheet" style="width:54px;height:76px;"></div></div>
+      <div class="size-name">A6</div>
+      <div class="size-dims">4.1 × 5.8 in</div>
+      <div class="size-desc">Pocket-sized · purse-friendly · ultra portable</div>
+    </div>
+    <div class="card" data-size="A5" onclick="selectCard(this)">
+      <div class="check">✓</div>
+      <div class="paper-preview"><div class="paper-sheet" style="width:62px;height:88px;"></div></div>
+      <div class="size-name">A5</div>
+      <div class="size-dims">5.8 × 8.3 in</div>
+      <div class="size-desc">Compact · most popular · fits any bag</div>
+    </div>
+    <div class="card" data-size="Half Letter" onclick="selectCard(this)">
+      <div class="check">✓</div>
+      <div class="paper-preview"><div class="paper-sheet" style="width:64px;height:98px;"></div></div>
+      <div class="size-name">Half Letter</div>
+      <div class="size-dims">5.5 × 8.5 in</div>
+      <div class="size-desc">US half-sheet · easy to print at home</div>
+    </div>
+    <div class="card" data-size="Letter" onclick="selectCard(this)">
+      <div class="check">✓</div>
+      <div class="paper-preview"><div class="paper-sheet" style="width:76px;height:98px;"></div></div>
+      <div class="size-name">Letter</div>
+      <div class="size-dims">8.5 × 11 in</div>
+      <div class="size-desc">Full US letter · maximum writing space</div>
+    </div>
+  </div>
+
+  <div class="generate-wrap">
+    <button class="gen-btn" id="genBtn" onclick="generate()" disabled>
+      <span>✦ &nbsp; Open Print-Ready Planner &nbsp; ✦</span>
+    </button>
+    <div class="summary" id="summary">Select a size above to continue</div>
+    <div class="generating-msg" id="genMsg">Building your planner…</div>
+  </div>
+</div>
+
+<footer>Chalant &nbsp;·&nbsp; 2026 Planner Collection &nbsp;·&nbsp; be bold. be chalant.</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   CHALANT PLANNER — FULL CLIENT-SIDE GENERATOR
+   Ports planner-core.js + build.py entirely to JS
+═══════════════════════════════════════════════════ */
+
+// ── SIZE PARAMS ──────────────────────────────────
+const SIZES = {
+  A6: {
+    pw:'359px', ph:'521px', mt:32, mb:32, mi:42, mo:32, hlw:78,
+    print_w:'4.1', print_h:'5.8', page_size:'105mm 148mm', page_size_w:'105mm', page_size_h:'148mm', print_cw:'3.884in', print_ch:'5.577in',
+    line_h:18, line_sm:14, fbox_h:24, sl_fs:7, mt8:6,
+    brand_fs:64, cyear_fs:12, csub_fs:12, cedition_fs:7,
+    pgscript_fs:28, pgcaps_fs:7, ygg:6,
+    mmn_fs:8, mcr_fs:6, mcrhdr_fs:5,
+    pgtitle_fs:28, qgg:6, qcp:4, qt_fs:9, twocol:6,
+    ms_fs:34, mybadge_fs:9, cdh_fs:6.5, cc_h:67, cc_p:'4px 3px 3px 4px',
+    cdn_fs:11, bl_fs:6, p3n_fs:11,
+    wkscript_fs:24, wkrange_fs:9, db_mb:6,
+    dname_fs:9, dnum_fs:14, dmo_fs:7,
+    hs_mt:6, sect_fs:6, hdlbl_fs:6, hr_mb:2, hl_fs:8, hb_sz:12, ww_mt:4,
+    qsub_fs:8, verso_lines:3, recto_lines:2,
+    size_label:'A6 (4.1 × 5.8 in)',
+    print_instructions:'Open in Chrome or Edge &rarr; Print / Save PDF &rarr; set <strong>Paper size: A6</strong> &bull; <strong>Margins: Default</strong> &bull; <strong>Background graphics: On</strong>',
+    paper_step:'Paper size &rarr; A6'
+  },
+  A5: {
+    pw:'521px', ph:'756px', mt:40, mb:40, mi:72, mo:32, hlw:100,
+    print_w:'5.8', print_h:'8.3', page_size:'148mm 210mm', page_size_w:'148mm', page_size_h:'210mm', print_cw:'5.577in', print_ch:'8.018in',
+    line_h:21, line_sm:17, fbox_h:32, sl_fs:7.5, mt8:9,
+    brand_fs:57.5, cyear_fs:11.5, csub_fs:11.5, cedition_fs:7,
+    pgscript_fs:33.5, pgcaps_fs:7, ygg:8,
+    mmn_fs:8.5, mcr_fs:7, mcrhdr_fs:6,
+    pgtitle_fs:33.5, qgg:8, qcp:6, qt_fs:9, twocol:8,
+    ms_fs:42.5, mybadge_fs:9, cdh_fs:7, cc_h:108, cc_p:'6px 4px 4px 6px',
+    cdn_fs:12, bl_fs:6, p3n_fs:12,
+    wkscript_fs:29, wkrange_fs:9, db_mb:7,
+    dname_fs:9, dnum_fs:16.5, dmo_fs:7.5,
+    hs_mt:8, sect_fs:6.5, hdlbl_fs:6, hr_mb:3, hl_fs:8.5, hb_sz:11, ww_mt:6,
+    qsub_fs:8.5, verso_lines:5, recto_lines:2,
+    size_label:'A5 (5.8 × 8.3 in)',
+    print_instructions:'Open in Chrome or Edge &rarr; Print / Save PDF &rarr; set <strong>Paper size: A5</strong> &bull; <strong>Margins: Default</strong> &bull; <strong>Background graphics: On</strong>',
+    paper_step:'Paper size &rarr; A5'
+  },
+  'Half Letter': {
+    pw:'490px', ph:'778px', mt:44, mb:44, mi:72, mo:32, hlw:108,
+    print_w:'5.5', print_h:'8.5', page_size:'5.5in 8.5in', page_size_w:'5.5in', page_size_h:'8.5in', print_cw:'5.25in', print_ch:'8.25in',
+    line_h:24, line_sm:19, fbox_h:32, sl_fs:8.5, mt8:9,
+    brand_fs:62, cyear_fs:14, csub_fs:13, cedition_fs:8.5,
+    pgscript_fs:36, pgcaps_fs:8.5, ygg:9,
+    mmn_fs:10, mcr_fs:7.5, mcrhdr_fs:6.5,
+    pgtitle_fs:36, qgg:9, qcp:7, qt_fs:11, twocol:9,
+    ms_fs:46, mybadge_fs:11, cdh_fs:8, cc_h:112, cc_p:'6px 5px 5px 6px',
+    cdn_fs:14, bl_fs:7.5, p3n_fs:14,
+    wkscript_fs:32, wkrange_fs:11, db_mb:9,
+    dname_fs:11, dnum_fs:18, dmo_fs:9,
+    hs_mt:9, sect_fs:7.5, hdlbl_fs:7.5, hr_mb:3, hl_fs:10, hb_sz:15, ww_mt:7,
+    qsub_fs:10, verso_lines:5, recto_lines:2,
+    size_label:'Half Letter (5.5 × 8.5 in)',
+    print_instructions:'Open in Chrome or Edge &rarr; Print / Save PDF &rarr; set <strong>Paper size: Statement</strong> (Windows) or <strong>Manage Custom Sizes&hellip; &rarr; 5.5 &times; 8.5 in</strong> (Mac) &bull; <strong>Margins: Default</strong> &bull; <strong>Background graphics: On</strong><br><em style="font-size:9px;color:var(--il)">Tip: &ldquo;Save as PDF&rdquo; first, then print the PDF &mdash; the page size will be set correctly automatically.</em>',
+    paper_step:'Paper size &rarr; Statement <em style="font-size:8px">(Windows)</em> &nbsp;or&nbsp; Manage Custom Sizes 5.5&times;8.5in <em style="font-size:8px">(Mac)</em>'
+  },
+  Letter: {
+    pw:'778px', ph:'1018px', mt:56, mb:56, mi:96, mo:40, hlw:130,
+    print_w:'8.5', print_h:'11', page_size:'8.5in 11in',  page_size_w:'8.5in', page_size_h:'11in',  print_cw:'8.25in', print_ch:'10.75in',
+    line_h:32, line_sm:26, fbox_h:42, sl_fs:10, mt8:12,
+    brand_fs:76, cyear_fs:15, csub_fs:15, cedition_fs:9,
+    pgscript_fs:44, pgcaps_fs:9, ygg:10,
+    mmn_fs:11, mcr_fs:9, mcrhdr_fs:8,
+    pgtitle_fs:44, qgg:10, qcp:8, qt_fs:12, twocol:10,
+    ms_fs:56, mybadge_fs:12, cdh_fs:9, cc_h:142, cc_p:'8px 6px 6px 8px',
+    cdn_fs:16, bl_fs:8, p3n_fs:16,
+    wkscript_fs:38, wkrange_fs:12, db_mb:10,
+    dname_fs:12, dnum_fs:22, dmo_fs:10,
+    hs_mt:10, sect_fs:8.5, hdlbl_fs:8, hr_mb:4, hl_fs:11, hb_sz:17, ww_mt:8,
+    qsub_fs:11, verso_lines:5, recto_lines:3,
+    size_label:'Letter (8.5 × 11 in)',
+    print_instructions:'Open in Chrome or Edge &rarr; Print / Save PDF &rarr; set <strong>Paper size: Letter (8.5 &times; 11 in)</strong> &bull; <strong>Margins: Default</strong> &bull; <strong>Background graphics: On</strong>',
+    paper_step:'Paper size &rarr; Letter (8.5 &times; 11 in)'
+  }
+};
+
+// ── PLANNER CORE ─────────────────────────────────
+const MONTHS    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SH = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS_SUN  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const WEEK_MON  = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+function fmtDate(d){ return `${MONTHS_SH[d.getMonth()]} ${d.getDate()}`; }
+function corners(){ return `<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>`; }
+function wlines(n, cls='wl'){ return Array(n).fill(`<div class="${cls}"></div>`).join(''); }
+
+function getWeeks2026(){
+  const weeks=[];
+  let d=new Date(2026,0,1);
+  const dow=d.getDay();
+  d.setDate(d.getDate()+(dow===0?-6:1-dow));
+  for(;;){
+    const days=[];
+    for(let i=0;i<7;i++){days.push(new Date(d));d.setDate(d.getDate()+1);}
+    if(days[0].getFullYear()>2026) break;
+    if(days[6].getFullYear()<2026) continue;
+    weeks.push(days);
+  }
+  return weeks;
+}
+
+function buildMiniMonth(m){
+  const fd=new Date(2026,m,1).getDay();
+  const days=daysInMonth(2026,m);
+  let cells='';
+  for(let i=0;i<fd;i++) cells+=`<span class="e"> </span>`;
+  for(let d=1;d<=days;d++) cells+=`<span class="${(fd+d-1)%7===0?'su':''}">${d}</span>`;
+  const tot=fd+days;
+  for(let i=0;i<(7-tot%7)%7;i++) cells+=`<span class="e"> </span>`;
+  const hdr=DAYS_SUN.map(s=>`<span class="dh">${s[0]}</span>`).join('');
+  return `<div class="mmb"><div class="mmn">${MONTHS_SH[m]}</div><div class="mcr hdr">${hdr}</div><div class="mcr">${cells}</div></div>`;
+}
+
+function buildCover(size){
+  return `<div class="page right cover">${corners()}
+<div class="cover-border-outer"></div><div class="cover-border-inner"></div>
+<div class="cover-content">
+<div class="orn">✦ ✦ ✦</div>
+<div class="cbrand">Chalant</div><div class="cyear">2 0 2 6</div>
+<div class="cdiv"></div>
+<div class="csub">${size} Planner<br><em>5-in-1</em></div>
+<div class="cedition">Day · Week · Month · Quarter · Year</div>
+</div>
+</div>`;
+}
+
+function buildCoverBlank(size){
+  return `<div class="page right cover">${corners()}
+<div class="cover-border-outer"></div><div class="cover-border-inner"></div>
+<div class="cover-content">
+<div class="orn">✦ ✦ ✦</div>
+<div class="cbrand">Chalant</div><div class="cyear-blank">Undated</div>
+<div class="cdiv"></div>
+<div class="csub">${size} Planner<br><em>5-in-1</em></div>
+<div class="cedition">Day · Week · Month · Quarter · Year</div>
+</div>
+</div>`;
+}
+
+function buildBlankPage(){
+  return `<div class="page left blank-buffer" style="background:var(--cream);"></div>`;
+}
+
+function buildWhatsInside(){
+  return `<div class="page right whats-inside-page">${corners()}
+<div class="wi-body">
+<div class="wi-header">What's Inside</div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Year at a Glance</div><div class="wi-desc">See your whole year in one view</div></div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Year Goals</div><div class="wi-desc">Vision, word of the year &amp; bucket list</div></div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Monthly</div><div class="wi-desc">Intentions, calendar &amp; monthly details</div></div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Quarterly</div><div class="wi-desc">Reflect, reset &amp; plan ahead</div></div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Weekly</div><div class="wi-desc">Day-by-day planning &amp; habit tracker</div></div>
+<div class="wi-rule"></div>
+<div class="wi-tagline">be bold. be chalant.</div>
+</div></div>`;
+}
+
+function buildWhatsInsideBlank(){
+  return `<div class="page right whats-inside-page">${corners()}
+<div class="wi-body">
+<div class="wi-header">What's Inside</div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Vision &amp; Intentions</div><div class="wi-desc">Set your theme, word of the year &amp; intentions</div></div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Year Goals</div><div class="wi-desc">Vision, word of the year &amp; bucket list</div></div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Monthly</div><div class="wi-desc">Intentions, calendar &amp; monthly details</div></div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Quarterly</div><div class="wi-desc">Reflect, reset &amp; plan ahead</div></div>
+<div class="wi-rule"></div>
+<div class="wi-section"><div class="wi-title">Weekly</div><div class="wi-desc">Day-by-day planning &amp; habit tracker</div></div>
+<div class="wi-rule"></div>
+<div class="wi-tagline">be bold. be chalant.</div>
+</div></div>`;
+}
+
+function buildYearGlance(){
+  const leftMonths=[0,1,2,6,7,8];
+  const rightMonths=[3,4,5,9,10,11];
+  return `
+<div class="page left yag">${corners()}
+<div class="pg-hdr"><span class="pg-script">2026</span><span class="pg-caps">Year at a Glance</span></div>
+<div class="yg-grid">${leftMonths.map(m=>buildMiniMonth(m)).join('')}</div>
+<div class="yag-notes"><div class="sl">Notes</div>${wlines(16)}</div>
+</div>
+<div class="page right yag">${corners()}
+<div class="pg-hdr" style="justify-content:flex-end"><span class="pg-caps">Year at a Glance</span><span class="pg-script">2026</span></div>
+<div class="yg-grid">${rightMonths.map(m=>buildMiniMonth(m)).join('')}</div>
+<div class="yag-notes"><div class="sl">Notes</div>${wlines(16)}</div>
+</div>`;
+}
+
+function buildYearGlanceBlank(){
+  return `
+<div class="page left vision">${corners()}
+<div class="mph" style="margin-bottom:8px"><span class="ms" style="font-size:34px">My Vision</span><span class="pg-caps" style="font-size:6.5px;color:var(--il)">This Year</span></div>
+<div class="sl">This Year's Theme</div><div class="fbox" style="margin-bottom:10px"></div>
+<div class="sl">My Word of the Year</div><div class="fbox" style="margin-bottom:10px"></div>
+<div class="mt8"><div class="sl">What Success Looks Like</div>${wlines(6)}</div>
+<div class="mt8"><div class="sl">What I'm Most Excited About</div>${wlines(5)}</div>
+<div class="mt8"><div class="sl">My Vision</div>${wlines(7)}</div>
+</div>
+<div class="page right intentions">${corners()}
+<div class="mph" style="margin-bottom:8px;justify-content:flex-end"><span class="pg-caps" style="font-size:6.5px;color:var(--il)">Intentions</span></div>
+<div class="sl">This Year I Will Let Go Of</div>${wlines(5)}
+<div class="mt8"><div class="sl">This Year I Will Embrace</div>${wlines(5)}</div>
+<div class="mt8"><div class="sl">This Year I Will Prioritize</div>${wlines(4)}</div>
+<div class="mt8"><div class="sl">People I Want to Pour Into</div>${wlines(4)}</div>
+<div class="mt8"><div class="sl">What I Want to Feel</div>${wlines(4)}</div>
+</div>`;
+}
+
+function buildYearlyGoals(dated){
+  const l3=wlines(3,'wl-sm'),l4=wlines(4,'wl-sm'),l5=wlines(5),l6=wlines(6);
+  const yf=dated?'':` <div class="sl">Year</div><div class="fbox" style="margin-bottom:10px"></div>`;
+  return `
+<div class="page left ygoals">${corners()}
+<div class="pg-title">My Year</div>${yf}
+<div class="sl">Word of the Year</div><div class="fbox" style="margin-bottom:10px"></div>
+<div class="quad-grid">
+<div class="qc"><div class="qt">Health &amp; Wellness</div>${l3}</div>
+<div class="qc"><div class="qt">Career &amp; Finance</div>${l3}</div>
+<div class="qc"><div class="qt">Relationships</div>${l3}</div>
+<div class="qc"><div class="qt">Personal Growth</div>${l3}</div>
+</div>
+<div class="mt8"><div class="sl">Bucket List</div>${l5}</div>
+<div class="mt8"><div class="sl">Books to Read This Year</div>${l4}</div>
+<div class="mt8"><div class="sl">Places to Go</div>${l4}</div>
+</div>
+<div class="page right ygoals">${corners()}
+<div class="pg-title" style="text-align:right">Intentions</div>
+<div class="sl">This year I will let go of...</div><div class="fbox" style="margin-bottom:10px"></div>
+<div class="sl">This year I will embrace...</div><div class="fbox" style="margin-bottom:10px"></div>
+<div class="sl">Top 3 Goals</div>
+<div class="p3-wrap">
+${[1,2,3].map(n=>`<div class="p3r"><span class="p3n">${n}</span><div class="p3line"></div></div>`).join('')}
+</div>
+<div class="mt8"><div class="sl">Habits to Build</div>${l4}</div>
+<div class="mt8"><div class="sl">Grateful For This Year</div>${l5}</div>
+<div class="mt8"><div class="sl">Notes</div>${l5}</div>
+</div>`;
+}
+
+function buildMonthGlance(m){
+  const fdSun=new Date(2026,m,1).getDay();
+  const days=daysInMonth(2026,m);
+  let cells=[];
+  for(let i=0;i<fdSun;i++) cells.push(null);
+  for(let d=1;d<=days;d++) cells.push(d);
+  while(cells.length%7!==0) cells.push(null);
+  const rows=[];
+  for(let i=0;i<cells.length;i+=7) rows.push(cells.slice(i,i+7));
+  const mkCell=d=>d===null?`<div class="cc ec"></div>`:`<div class="cc"><div class="cdn">${d}</div><div class="cl"></div></div>`;
+  const lHdr=['Sun','Mon','Tue','Wed'].map(d=>`<div class="cdh">${d}</div>`).join('');
+  const rHdr=['Thu','Fri','Sat'].map(d=>`<div class="cdh">${d}</div>`).join('');
+  const lCells=rows.map(r=>r.slice(0,4).map(mkCell).join('')).join('');
+  const rCells=rows.map(r=>r.slice(4,7).map(mkCell).join('')).join('');
+  return `
+<div class="page left mpg">${corners()}
+<div class="mph"><div class="ms">${MONTHS[m]}</div><div class="my-badge">2026</div></div>
+<div class="cdhrow" style="grid-template-columns:repeat(4,1fr)">${lHdr}</div>
+<div class="cgrid" style="grid-template-columns:repeat(4,1fr)">${lCells}</div>
+</div>
+<div class="page right mpg">${corners()}
+<div class="mph"><span class="pg-caps" style="font-size:7px;color:var(--il);letter-spacing:.15em">Month at a Glance</span></div>
+<div class="cdhrow" style="grid-template-columns:repeat(3,1fr)">${rHdr}</div>
+<div class="cgrid" style="grid-template-columns:repeat(3,1fr)">${rCells}</div>
+<div class="mfstrip">
+<div class="mfb"><div class="bl">Focus</div>${wlines(2,'wl-sm')}</div>
+<div class="mfb"><div class="bl">Goal</div>${wlines(2,'wl-sm')}</div>
+<div class="mfb"><div class="bl">Notes</div>${wlines(2,'wl-sm')}</div>
+</div>
+</div>`;
+}
+
+function buildMonthGlanceBlank(){
+  const lHdr=['Sun','Mon','Tue','Wed'].map(d=>`<div class="cdh">${d}</div>`).join('');
+  const rHdr=['Thu','Fri','Sat'].map(d=>`<div class="cdh">${d}</div>`).join('');
+  const mkBlank=()=>`<div class="cc"><div class="df"></div><div class="cl"></div></div>`;
+  let lC='',rC='';
+  for(let r=0;r<6;r++){for(let c=0;c<4;c++)lC+=mkBlank();for(let c=0;c<3;c++)rC+=mkBlank();}
+  return `
+<div class="page left mpg">${corners()}
+<div class="mph">
+<div style="display:flex;align-items:baseline;gap:8px"><span class="pg-caps" style="font-size:8px;color:var(--il)">Month</span><div style="width:120px;border-bottom:2px solid var(--rs);height:26px"></div></div>
+<div class="my-badge">____</div>
+</div>
+<div class="cdhrow" style="grid-template-columns:repeat(4,1fr)">${lHdr}</div>
+<div class="cgrid" style="grid-template-columns:repeat(4,1fr)">${lC}</div>
+</div>
+<div class="page right mpg">${corners()}
+<div class="mph"><span class="pg-caps" style="font-size:7px;color:var(--il);letter-spacing:.15em">Month at a Glance</span></div>
+<div class="cdhrow" style="grid-template-columns:repeat(3,1fr)">${rHdr}</div>
+<div class="cgrid" style="grid-template-columns:repeat(3,1fr)">${rC}</div>
+<div class="mfstrip">
+<div class="mfb"><div class="bl">Focus</div>${wlines(2,'wl-sm')}</div>
+<div class="mfb"><div class="bl">Goal</div>${wlines(2,'wl-sm')}</div>
+<div class="mfb"><div class="bl">Notes</div>${wlines(2,'wl-sm')}</div>
+</div>
+</div>`;
+}
+
+function buildMonthGoals(m, dated){
+  const heading=dated?MONTHS[m]:'Monthly';
+  const yf=dated?'':` <div class="sl">Month</div><div class="fbox" style="margin-bottom:8px"></div>`;
+  return `
+<div class="page left mgoals">${corners()}
+<div class="mph" style="margin-bottom:8px">
+<span class="ms" style="font-size:34px">${heading}</span>
+<span class="pg-caps" style="font-size:6.5px;color:var(--il)">Monthly Overview</span>
+</div>${yf}
+<div class="sl">Intention</div><div class="fbox" style="margin-bottom:8px"></div>
+<div class="sl">Top 3 Priorities</div>
+<div class="p3-wrap">
+${[1,2,3].map(n=>`<div class="p3r"><span class="p3n">${n}</span><div class="p3line"></div></div>`).join('')}
+</div>
+<div class="mt8"><div class="sl">Goals This Month</div>${wlines(6)}</div>
+<div class="mt8"><div class="sl">Grateful For</div>${wlines(5)}</div>
+<div class="mt8"><div class="sl">This Month's Focus Word</div><div class="fbox" style="margin-bottom:8px"></div></div>
+<div class="mt8"><div class="sl">Notes</div>${wlines(4,'wl-sm')}</div>
+</div>
+<div class="page right mgoals">${corners()}
+<div class="mph" style="margin-bottom:8px;justify-content:flex-end">
+<span class="pg-caps" style="font-size:6.5px;color:var(--il)">${dated?MONTHS[m]+' Details':'Monthly Details'}</span>
+</div>
+<div class="two-col">
+<div><div class="sl">Bills Due</div>${wlines(6,'wl-sm')}</div>
+<div><div class="sl">Appointments</div>${wlines(6,'wl-sm')}</div>
+</div>
+<div class="mt8"><div class="sl">Self Care This Month</div>${wlines(4,'wl-sm')}</div>
+<div class="mt8"><div class="sl">What I'm Looking Forward To</div>${wlines(3,'wl-sm')}</div>
+<div class="mt8"><div class="sl">Notes</div>${wlines(8)}</div>
+</div>`;
+}
+
+function dayHeader(label, dateStr){
+  return `<div class="dbh"><span class="dname">${label}</span><span class="dmo">${dateStr}</span></div>`;
+}
+
+function buildWeekSpread(days, p){
+  const monFri=days.slice(0,5);
+  const satSun=days.slice(5,7);
+  const habits=['Water (8 glasses)','Movement / Exercise','Journaling','Skincare Routine','Gratitude Practice','Reading','Vitamins / Meds','Sleep 7–8 hrs','Meal Prep','Mindfulness'];
+  const hrows=habits.map(h=>`<div class="hr"><span class="hl">${h}</span><div class="hboxes">${Array(7).fill('<div class="hb"></div>').join('')}</div></div>`).join('');
+  const monHdr=['M','T','W','T','F','S','S'];
+  return `
+<div class="page left wpage">${corners()}
+<div class="wk-hdr"><span class="wk-script">Week</span><span class="wk-range">${fmtDate(days[0])} – ${fmtDate(days[6])}</span></div>
+${monFri.map(d=>{
+  const inn=d.getFullYear()===2026;
+  const ds=inn?`${MONTHS_SH[d.getMonth()]} ${d.getDate()}`:'';
+  return `<div class="db">${dayHeader(DAYS_FULL[d.getDay()],ds)}${wlines(p.verso_lines)}</div>`;
+}).join('')}
+</div>
+<div class="page right wpage">${corners()}
+<div class="wk-hdr" style="justify-content:flex-end"><span class="wk-range">${fmtDate(days[0])} – ${fmtDate(days[6])}</span></div>
+<div class="weekend-row">
+${satSun.map(d=>{
+  const inn=d.getFullYear()===2026;
+  const ds=inn?`${MONTHS_SH[d.getMonth()]} ${d.getDate()}`:'';
+  return `<div class="db wd-sm">${dayHeader(DAYS_FULL[d.getDay()],ds)}${wlines(p.recto_lines)}</div>`;
+}).join('')}
+</div>
+<div class="habit-section">
+<div class="sect-title">Weekly Habit Tracker</div>
+<div class="hd-row"><div style="width:var(--hl-w)"></div><div class="hboxes">${monHdr.map(l=>`<span class="hd-lbl">${l}</span>`).join('')}</div></div>
+${hrows}
+</div>
+<div class="week-win">
+<div class="sect-title">Win of the Week</div>${wlines(2,'wl-sm')}
+<div class="sect-title mt6">Next Week's Focus</div>${wlines(2,'wl-sm')}
+</div>
+</div>`;
+}
+
+function buildWeekSpreadBlank(p){
+  const habits=['Water (8 glasses)','Movement / Exercise','Journaling','Skincare Routine','Gratitude Practice','Reading','Vitamins / Meds','Sleep 7–8 hrs','Meal Prep','Mindfulness'];
+  const hrows=habits.map(h=>`<div class="hr"><span class="hl">${h}</span><div class="hboxes">${Array(7).fill('<div class="hb"></div>').join('')}</div></div>`).join('');
+  const monHdr=['M','T','W','T','F','S','S'];
+  return `
+<div class="page left wpage">${corners()}
+<div class="wk-hdr"><span class="wk-script">Week</span><div style="width:110px;border-bottom:2px solid var(--rs)"></div></div>
+${WEEK_MON.slice(0,5).map(n=>`<div class="db">${dayHeader(n,'')}${wlines(p.verso_lines)}</div>`).join('')}
+</div>
+<div class="page right wpage">${corners()}
+<div class="wk-hdr" style="justify-content:flex-end"><div style="width:110px;border-bottom:2px solid var(--rs)"></div></div>
+<div class="weekend-row">
+${WEEK_MON.slice(5,7).map(n=>`<div class="db wd-sm">${dayHeader(n,'')}${wlines(p.recto_lines)}</div>`).join('')}
+</div>
+<div class="habit-section">
+<div class="sect-title">Weekly Habit Tracker</div>
+<div class="hd-row"><div style="width:var(--hl-w)"></div><div class="hboxes">${monHdr.map(l=>`<span class="hd-lbl">${l}</span>`).join('')}</div></div>
+${hrows}
+</div>
+<div class="week-win">
+<div class="sect-title">Win of the Week</div>${wlines(2,'wl-sm')}
+<div class="sect-title mt6">Next Week's Focus</div>${wlines(2,'wl-sm')}
+</div>
+</div>`;
+}
+
+function buildQuarter(q){
+  const qn=['First','Second','Third','Fourth'];
+  return `
+<div class="page left qreview">${corners()}
+<div class="pg-title">${qn[q-1]} Quarter</div>
+<div class="q-sub">Review · Reflect · Reset</div>
+<div class="quad-grid">
+<div class="qc"><div class="qt">What went well</div>${wlines(4,'wl-sm')}</div>
+<div class="qc"><div class="qt">What to improve</div>${wlines(4,'wl-sm')}</div>
+<div class="qc"><div class="qt">Biggest Win</div>${wlines(3,'wl-sm')}</div>
+<div class="qc"><div class="qt">Lesson Learned</div>${wlines(3,'wl-sm')}</div>
+</div>
+<div class="mt8"><div class="sl">Quarter Highlights</div>${wlines(5)}</div>
+</div>
+<div class="page right qreview">${corners()}
+<div class="pg-title" style="text-align:right">Next Quarter</div>
+<div class="q-sub" style="text-align:right">Plan · Prepare · Prosper</div>
+<div class="mt8"><div class="sl">My Intention</div><div class="fbox" style="margin-bottom:8px"></div></div>
+<div class="sl">Top 3 Goals</div>
+<div class="p3-wrap">
+${[1,2,3].map(n=>`<div class="p3r"><span class="p3n">${n}</span><div class="p3line"></div></div>`).join('')}
+</div>
+<div class="two-col mt8">
+<div><div class="sl">Goals Achieved</div>${wlines(4,'wl-sm')}</div>
+<div><div class="sl">Carried Forward</div>${wlines(4,'wl-sm')}</div>
+</div>
+<div class="mt8"><div class="sl">Notes</div>${wlines(6)}</div>
+</div>`;
+}
+
+function buildBackCover(){
+  return `<div class="page right back">${corners()}
+<div style="text-align:center">
+<div class="orn" style="color:var(--g)">✦ ✦ ✦</div>
+<div style="font-family:'Great Vibes',cursive;font-size:56px;color:var(--bm);line-height:1">Chalant</div>
+<div class="cdiv"></div>
+<div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--il);letter-spacing:.12em">she decided to bloom</div>
+</div>
+</div>`;
+}
+
+function assembleDated(sizeLabel, p){
+  const weeks=getWeeks2026();
+  let html='';
+  html+=buildCover(sizeLabel);
+  html+=buildBlankPage();
+  html+=buildWhatsInside();
+  html+=buildYearGlance();
+  html+=buildYearlyGoals(true);
+  let curMonth=-1;
+  for(const week of weeks){
+    const mth=week[2].getMonth();
+    if(week[2].getFullYear()!==2026) continue;
+    if(mth!==curMonth){
+      if(mth===3) html+=buildQuarter(1);
+      if(mth===6) html+=buildQuarter(2);
+      if(mth===9) html+=buildQuarter(3);
+      curMonth=mth;
+      html+=buildMonthGoals(mth,true);
+      html+=buildMonthGlance(mth);
+    }
+    html+=buildWeekSpread(week,p);
+  }
+  html+=buildQuarter(4);
+  html+=buildBlankPage();
+  html+=buildBackCover();
+  return html;
+}
+
+function assembleBlank(sizeLabel, p){
+  let html='';
+  html+=buildCoverBlank(sizeLabel);
+  html+=buildBlankPage();
+  html+=buildWhatsInsideBlank();
+  html+=buildYearGlanceBlank();
+  html+=buildYearlyGoals(false);
+  for(let q=1;q<=4;q++){
+    if(q>1) html+=buildQuarter(q-1);
+    for(let mm=0;mm<3;mm++){
+      html+=buildMonthGoals(mm,false);
+      html+=buildMonthGlanceBlank();
+      for(let w=0;w<4;w++) html+=buildWeekSpreadBlank(p);
+    }
+  }
+  html+=buildQuarter(4);
+  html+=buildBlankPage();
+  html+=buildBackCover();
+  return html;
+}
+
+// ── CSS GENERATOR ────────────────────────────────
+function buildCSS(p){
+  const sizeVars=`--pw:${p.pw};--ph:${p.ph};--mt:${p.mt}px;--mb:${p.mb}px;--mi:${p.mi}px;--mo:${p.mo}px;--hl-w:${p.hlw}px;`;
+  return `
+:root{
+  --blush:#c8824a;--bm:#b8692a;--bpale:#fdf0e0;--bd:#c8823a;
+  --g:#b8860b;--gl:#d4a017;--gp:#f5e8c0;--gd:#7a4f00;
+  --cream:#fefaf6;--ink:#1a0e04;--im:#3a2010;--il:#5a3a18;
+  --r:rgba(160,110,0,0.90);--rs:rgba(160,110,0,0.65);
+  ${sizeVars}
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#d6cec8;font-family:'Jost',sans-serif;font-weight:300;color:var(--ink);}
+body{padding:32px 20px 60px;}
+.screen-chrome{}
+.screen-title{text-align:center;font-family:'Great Vibes',cursive;font-size:42px;color:var(--gd);margin-bottom:4px;}
+.screen-sub{text-align:center;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--il);margin-bottom:16px;}
+.print-notice{max-width:680px;margin:0 auto 28px;background:#fefaf6;border:1.5px solid rgba(74,48,8,.3);border-left:5px solid var(--g);padding:14px 18px 14px 20px;display:flex;gap:14px;align-items:flex-start;}
+.pn-icon{font-size:18px;flex-shrink:0;color:var(--g);line-height:1.3;}
+.pn-body{font-family:'Jost',sans-serif;font-weight:300;font-size:10px;color:var(--im);line-height:1.75;}
+.pn-body strong{font-weight:400;color:var(--gd);}
+.pn-steps{margin-top:7px;display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;align-items:center;}
+.pn-step{display:flex;align-items:center;gap:5px;font-size:9px;letter-spacing:.05em;color:var(--il);}
+.pn-num{width:15px;height:15px;border-radius:50%;background:var(--g);color:#fefaf6;font-size:7.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.page{width:var(--pw);height:var(--ph);min-height:var(--ph);max-width:100%;background:var(--cream);position:relative;flex-shrink:0;overflow:hidden;box-shadow:0 2px 4px rgba(46,31,24,.1),0 10px 36px rgba(46,31,24,.18);transform-origin:top center;}
+.pages-row{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;overflow-x:hidden;}
+@media(max-width:620px){.page{width:100% !important;font-size:clamp(8px,2.5vw,14px);}body{padding:16px 8px 48px;}}
+.page.left{padding:var(--mt) var(--mi) var(--mb) var(--mo);}
+.page.right{padding:var(--mt) var(--mo) var(--mb) var(--mi);}
+.page.left::before,.page.right::before{display:none;}
+.page.cover::before,.page.cover::after,.cover::before,.cover::after{display:none !important;}
+.page.cover{padding:0 !important;}
+.blank-buffer::before,.blank-buffer::after{display:none !important;}
+.cover-back::before,.back::before{display:none !important;}
+.cover-back{min-height:var(--ph);background:var(--cream);}
+.corner{position:absolute;width:22px;height:22px;opacity:.5;pointer-events:none;}
+.corner.tl{top:9px;left:9px;border-top:1.5px solid var(--g);border-left:1.5px solid var(--g);}
+.corner.tr{top:9px;right:9px;border-top:1.5px solid var(--g);border-right:1.5px solid var(--g);}
+.corner.bl{bottom:9px;left:9px;border-bottom:1.5px solid var(--g);border-left:1.5px solid var(--g);}
+.corner.br{bottom:9px;right:9px;border-bottom:1.5px solid var(--g);border-right:1.5px solid var(--g);}
+.wl{border-bottom:1px solid var(--rs);height:${p.line_h}px;}
+.wl-sm{border-bottom:1px solid var(--rs);height:${p.line_sm}px;}
+.fbox{border:2px solid var(--rs);height:${p.fbox_h}px;background:rgba(250,234,230,.4);}
+.sl{font-size:${p.sl_fs}px;letter-spacing:.2em;text-transform:uppercase;color:var(--il);margin-bottom:3px;font-family:'Jost',sans-serif;font-weight:400;}
+.mt8{margin-top:${p.mt8}px;}
+.mt6{margin-top:6px;}
+.cover{background:linear-gradient(160deg,var(--cream) 0%,#fdf5ef 60%,var(--cream) 100%);display:block;padding:0;height:var(--ph);min-height:var(--ph);position:relative;}
+.cover-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:100%;}
+.cover .cover-border-outer{position:absolute;top:20px;left:20px;right:20px;bottom:20px;border:6px solid #b8860b;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(196,154,48,0.3),0 0 0 1px rgba(196,154,48,0.3);}
+.cover .cover-border-inner{position:absolute;top:36px;left:36px;right:36px;bottom:36px;border:1.5px solid rgba(160,110,0,0.85);pointer-events:none;}
+.orn{font-size:12px;color:var(--g);letter-spacing:.5em;margin-bottom:14px;opacity:.8;}
+.cbrand{font-family:'Great Vibes',cursive;font-size:${p.brand_fs}px;color:var(--gd);line-height:1.1;text-shadow:0 1px 6px rgba(74,48,8,.15);white-space:nowrap;letter-spacing:.02em;}
+.cyear{font-family:'Cormorant Garamond',serif;font-size:${p.cyear_fs}px;letter-spacing:.5em;color:var(--g);margin-top:5px;text-transform:uppercase;font-weight:400;}
+.cyear-blank{font-family:'Cormorant Garamond',serif;font-size:${p.cyear_fs}px;letter-spacing:.5em;color:var(--g);margin-top:5px;text-transform:uppercase;font-weight:400;}
+.cdiv{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent);margin:18px 0;}
+.csub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:${p.csub_fs}px;color:var(--im);letter-spacing:.12em;text-align:center;}
+.cedition{font-size:${p.cedition_fs}px;letter-spacing:.2em;text-transform:uppercase;color:var(--il);margin-top:22px;font-family:'Jost',sans-serif;font-weight:300;white-space:nowrap;}
+.blank-buffer{background:var(--cream);}
+.wi-header{font-family:'Great Vibes',cursive;font-size:${p.pgscript_fs}px;color:var(--gd);margin-bottom:${p.mt8}px;line-height:1.2;}
+.wi-rule{height:1px;background:rgba(160,110,0,0.25);margin:0;}
+.wi-section{padding:calc(${p.mt8}px * 3) 0;}
+.wi-title{font-family:'Cormorant Garamond',serif;font-size:calc(${p.csub_fs}px * 1.3);letter-spacing:.2em;text-transform:uppercase;color:var(--gd);font-weight:700;margin-bottom:6px;}
+.wi-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:calc(${p.csub_fs}px * 1.2);color:var(--im);letter-spacing:.03em;line-height:1.5;}
+.wi-tagline{font-family:'Great Vibes',cursive;font-size:${p.pgscript_fs}px;color:var(--gd);text-align:center;line-height:1.2;position:absolute;bottom:calc(var(--mb) + 10px);left:0;right:0;}
+.back{background:linear-gradient(160deg,#f9ede8 0%,var(--cream) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:var(--ph);}
+.yag{display:flex;flex-direction:column;}
+.pg-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;border-bottom:2.5px solid var(--r);padding-bottom:8px;}
+.pg-script{font-family:'Great Vibes',cursive;font-size:${p.pgscript_fs}px;color:var(--gd);line-height:1;}
+.pg-caps{font-family:'Jost',sans-serif;font-weight:400;letter-spacing:.22em;text-transform:uppercase;font-size:${p.pgcaps_fs}px;color:var(--il);}
+.yg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:${p.ygg}px;}
+.mmb{border:2px solid var(--rs);padding:5px 4px 4px;background:rgba(250,234,230,.35);}
+.mmn{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:${p.mmn_fs}px;color:var(--gd);text-align:center;letter-spacing:.08em;margin-bottom:3px;border-bottom:2px solid var(--rs);padding-bottom:3px;font-weight:400;}
+.mcr{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;line-height:1.6;}
+.mcr span{font-size:${p.mcr_fs}px;line-height:1.6;color:var(--im);font-family:'Cormorant Garamond',serif;}
+.mcr.hdr span{font-family:'Jost',sans-serif;font-weight:400;font-size:${p.mcrhdr_fs}px;color:var(--g);letter-spacing:.04em;line-height:2;}
+.mcr span.e{color:transparent;}
+.mcr span.su{color:var(--bd);font-weight:400;}
+.pg-title{font-family:'Great Vibes',cursive;font-size:${p.pgtitle_fs}px;color:var(--gd);line-height:1;border-bottom:2.5px solid var(--r);padding-bottom:6px;margin-bottom:8px;}
+.quad-grid{display:grid;grid-template-columns:1fr 1fr;gap:${p.qgg}px;margin-top:6px;}
+.qc{border:2px solid var(--rs);padding:${p.qcp}px;background:rgba(250,234,230,.3);}
+.qt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:${p.qt_fs}px;color:var(--gd);margin-bottom:4px;border-bottom:2px solid var(--rs);padding-bottom:3px;font-weight:400;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:${p.twocol}px;}
+.mph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:8px;border-bottom:2.5px solid var(--r);padding-bottom:7px;}
+.mpg{padding-left:calc(var(--mo) * 0.6) !important;padding-right:calc(var(--mo) * 0.6) !important;}
+.ms{font-family:'Great Vibes',cursive;font-size:${p.ms_fs}px;color:var(--gd);line-height:1;}
+.my-badge{font-family:'Cormorant Garamond',serif;font-size:${p.mybadge_fs}px;letter-spacing:.25em;color:var(--gd);text-transform:uppercase;padding:3px 8px;border:2px solid var(--r);font-weight:400;}
+.cdhrow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:3px;}
+.cdh{font-size:${p.cdh_fs}px;text-align:center;text-transform:uppercase;letter-spacing:.1em;color:var(--gd);font-family:'Jost',sans-serif;font-weight:400;padding:3px 0;}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);border-left:2px solid var(--rs);border-top:2px solid var(--rs);}
+.cc{border-right:2px solid var(--rs);border-bottom:2px solid var(--rs);min-height:${p.cc_h}px;padding:${p.cc_p};height:100%;}
+.cc.ec{background:rgba(250,234,230,.4);}
+.cc.cs .cdn{color:var(--bd);font-weight:400;}
+.cdn{font-family:'Cormorant Garamond',serif;font-size:${p.cdn_fs}px;color:var(--ink);line-height:1;}
+.cl{border-bottom:1px solid var(--rs);margin-top:6px;}
+.df{width:18px;height:16px;border-bottom:2px solid var(--rs);}
+.mfstrip{display:flex;gap:5px;margin-top:8px;}
+.mfb{flex:1;border:2px solid var(--rs);padding:4px 5px;}
+.bl{font-size:${p.bl_fs}px;letter-spacing:.18em;text-transform:uppercase;color:var(--gd);margin-bottom:2px;font-weight:400;}
+.p3-wrap{display:flex;flex-direction:column;gap:5px;margin-bottom:6px;margin-top:4px;}
+.p3r{display:flex;align-items:center;gap:6px;}
+.p3n{font-family:'Cormorant Garamond',serif;font-size:${p.p3n_fs}px;color:var(--gd);flex-shrink:0;font-weight:400;}
+.p3line{flex:1;border-bottom:1px solid var(--rs);height:20px;}
+.wk-hdr{border-bottom:2.5px solid var(--r);padding-bottom:6px;margin-bottom:8px;display:flex;align-items:baseline;justify-content:space-between;}
+.wk-script{font-family:'Great Vibes',cursive;font-size:${p.wkscript_fs}px;color:var(--gd);line-height:1;}
+.wk-range{font-family:'Cormorant Garamond',serif;font-size:${p.wkrange_fs}px;color:var(--il);letter-spacing:.1em;font-weight:400;}
+.db{margin-bottom:${p.db_mb}px;flex:1;display:flex;flex-direction:column;}
+.dbh{display:flex;align-items:baseline;gap:6px;margin-bottom:3px;}
+.dname{font-family:'Cormorant Garamond',serif;font-size:${p.dname_fs}px;font-style:italic;color:var(--gd);letter-spacing:.06em;font-weight:400;}
+.dnum{font-family:'Cormorant Garamond',serif;font-size:${p.dnum_fs}px;color:var(--ink);line-height:1;font-weight:400;}
+.drule{flex:1;border-top:1px solid var(--rs);align-self:center;}
+.dmo{font-size:${p.dmo_fs}px;color:var(--il);font-family:'Cormorant Garamond',serif;font-weight:400;}
+.habit-section{margin-top:${p.hs_mt}px;border-top:2px solid var(--rs);padding-top:6px;}
+.sect-title{font-size:${p.sect_fs}px;letter-spacing:.22em;text-transform:uppercase;color:var(--gd);margin-bottom:4px;border-bottom:2px solid var(--rs);padding-bottom:3px;font-family:'Jost',sans-serif;font-weight:400;}
+.hd-row{display:flex;align-items:center;margin-bottom:3px;gap:4px;}
+.hd-lbl{font-size:${p.hdlbl_fs}px;letter-spacing:.05em;text-align:center;color:var(--gd);font-family:'Jost',sans-serif;font-weight:400;width:${p.hb_sz}px;flex-shrink:0;flex-grow:0;}
+.hr{display:flex;align-items:center;gap:4px;margin-bottom:${p.hr_mb}px;}
+.hl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:${p.hl_fs}px;color:var(--im);width:var(--hl-w);flex-shrink:0;font-weight:400;}
+.hboxes{display:flex;flex:1;justify-content:space-evenly;align-items:center;}
+.hb{width:${p.hb_sz}px;height:${p.hb_sz}px;border:2px solid var(--r);border-radius:2px;flex-shrink:0;flex-grow:0;}
+.week-win{margin-top:${p.ww_mt}px;border:2px solid var(--rs);padding:5px 6px;background:rgba(237,224,192,.25);}
+.q-sub{font-size:${p.qsub_fs}px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--il);margin-bottom:8px;}
+.yag-notes{margin-top:${p.mt8}px;}
+.weekend-row{display:flex;gap:${p.mt8}px;}
+.wd-sm{flex:1;}
+.page.wpage{display:flex;flex-direction:column;height:100%;}
+.page.wpage .habit-section{flex:1;display:flex;flex-direction:column;}
+.page.wpage .week-win{margin-top:auto;}
+.mpg .cgrid{flex:1;align-content:stretch;}
+.mpg{display:flex;flex-direction:column;height:100%;}
+@media print{
+@page{margin:0;}
+html,body{background:white !important;margin:0 !important;padding:0 !important;}
+.screen-chrome{display:none !important;}
+.page{box-shadow:none !important;page-break-after:always !important;break-after:page !important;}
+*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
+}
+
+.print-btn{display:block;margin:32px auto 0;background:linear-gradient(135deg,var(--gd),var(--g));color:#fff;border:none;padding:13px 36px;font-family:'Jost',sans-serif;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:opacity .2s,transform .15s;}
+.print-btn:hover{opacity:.85;transform:translateY(-1px);}`;
+}
+
+// ── FULL HTML BUILDER ─────────────────────────────
+function buildFullHTML(sizeKey, edition){
+  const p = SIZES[sizeKey];
+  const dated = edition === 'dated';
+  const title = dated
+    ? `Chalant — ${sizeKey} 2026 Planner (Dated)`
+    : `Chalant — ${sizeKey} Planner (Undated)`;
+  const screenSub = dated
+    ? `&#10022; &nbsp; ${sizeKey} &middot; ${p.print_w}&times;${p.print_h} in &middot; 2026 Dated &nbsp; &#10022;`
+    : `&#10022; &nbsp; ${sizeKey} &middot; ${p.print_w}&times;${p.print_h} in &middot; Undated &nbsp; &#10022;`;
+  const pages = dated ? assembleDated(sizeKey, p) : assembleBlank(sizeKey, p);
+  const css = buildCSS(p);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>${css}</style>
+</head>
+<body>
+<div class="screen-chrome">
+<div class="screen-title">Chalant</div>
+<div class="screen-sub">${screenSub}</div>
+<div class="print-notice">
+<div class="pn-icon">&#10022;</div>
+<div class="pn-body">
+<strong>How to print (${p.size_label}):</strong><br>
+${p.print_instructions}
+<div class="pn-steps">
+<span class="pn-step"><span class="pn-num">1</span> Open in Chrome or Edge</span>
+<span class="pn-step"><span class="pn-num">4</span> Margins &rarr; Default</span>
+<span class="pn-step"><span class="pn-num">2</span> Click Print / Save PDF</span>
+<span class="pn-step"><span class="pn-num">5</span> Background graphics &rarr; On</span>
+<span class="pn-step" style="grid-column:1 / -1"><span class="pn-num">3</span> ${p.paper_step}</span>
+</div>
+</div>
+</div>
+<button class="print-btn" onclick="window.print()">&#10022; &nbsp; Print / Save PDF &nbsp; &#10022;</button>
+</div>
+<div class="pages-row" id="pp">${pages}</div>
+</body>
+</html>`;
+}
+
+// ── UI LOGIC ──────────────────────────────────────
+let selectedSize = null;
+let selectedEdition = 'dated';
+
+function setEdition(btn){
+  document.querySelectorAll('.ed-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedEdition = btn.dataset.edition;
+  updateSummary();
+}
+
+function selectCard(card){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedSize = card.dataset.size;
+  document.getElementById('genBtn').disabled = false;
+  updateSummary();
+}
+
+function updateSummary(){
+  const el = document.getElementById('summary');
+  if(!selectedSize){
+    el.textContent = 'Select a size above to continue';
+    el.classList.remove('has-selection');
+  } else {
+    const p = SIZES[selectedSize];
+    const ed = selectedEdition === 'dated' ? '2026 Dated' : 'Undated';
+    el.textContent = `${selectedSize} · ${p.print_w} × ${p.print_h} in · ${ed}`;
+    el.classList.add('has-selection');
+  }
+}
+
+function generate(){
+  if(!selectedSize) return;
+  const msg = document.getElementById('genMsg');
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  msg.classList.add('visible');
+
+  // Yield to browser to show loading state, then build
+  setTimeout(() => {
+    try {
+      const html = buildFullHTML(selectedSize, selectedEdition);
+      const blob = new Blob([html], {type:'text/html'});
+      const url  = URL.createObjectURL(blob);
+      // Open in new tab — fully self-contained, print-ready
+      const w = window.open(url, '_blank');
+      if(!w){
+        // Fallback: download
+        const a = document.createElement('a');
+        const ed = selectedEdition === 'dated' ? '2026' : 'blank';
+        a.href = url;
+        a.download = `chalant-${selectedSize.replace(' ','-').toLowerCase()}-${ed}.html`;
+        a.click();
+      }
+    } catch(e) {
+      alert('Error generating planner: ' + e.message);
+    }
+    btn.disabled = false;
+    msg.classList.remove('visible');
+  }, 60);
+}
+</script>
+</body>
+</html>
