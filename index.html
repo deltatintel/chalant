@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chalant — Choose Your Size</title>
+<link rel="manifest" href="/chalant/manifest.json">
+<link rel="apple-touch-icon" href="/chalant/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chalant">
+<meta name="theme-color" content="#b8860b">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -881,6 +887,11 @@ function generate(){
     btn.disabled = false;
     msg.classList.remove('visible');
   }, 60);
+}
+</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/chalant/service-worker.js');
 }
 </script>
 </body>
